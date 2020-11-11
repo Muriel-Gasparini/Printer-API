@@ -8,7 +8,14 @@ exports.print = async (req, res) => {
   try {
     const name = uuid.v1()
     const file = await File.create({ name })
-    await capture.file(url, `./src/images/${file.name}.png`, { args: ['--no-sandbox'] })
+    await capture.file(url, `./src/images/${file.name}.png`, {
+      launchOptions: {
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox'
+        ]
+      }
+    })
     res.download(`./src/images/${name}.png`)
     res.status(200).json({ link: `http://localhost:3000/screenshot/${file._id}` })
     deleteImg(file.name, file._id)
