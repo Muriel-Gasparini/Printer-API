@@ -13,6 +13,7 @@ exports.print = async (req, res) => {
     res.status(200).json({ link: `http://localhost:3000/screenshot/${file._id}` })
     deleteImg(file.name, file._id)
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: 'An error ocurred' })
   }
 }
