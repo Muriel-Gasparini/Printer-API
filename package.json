@@ -1,0 +1,14 @@
+{
+  "name": "printer-api",
+  "version": "1.0.0",
+  "description": "Print and Download any website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Muriel Gasparini",
+  "license": "ISC",
+  "devDependencies": {
+    "git-commit-msg-linter": "^3.0.0"
+  }
+}
