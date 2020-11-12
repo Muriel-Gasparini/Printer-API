@@ -11,8 +11,7 @@ exports.print = async (req, res) => {
     await capture.file(url, `./src/images/${file.name}.png`, {
       launchOptions: {
         args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox'
+          '--no-sandbox'
         ]
       }
     })
