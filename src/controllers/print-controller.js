@@ -1,3 +1,4 @@
+const path = require('path')
 const uuid = require('uuid')
 const File = require('../model/File')
 const site = require('../utils/site-print')
@@ -10,7 +11,7 @@ exports.print = async (req, res) => {
     const name = uuid.v1()
     const file = await File.create({ name })
 
-    await site.print(url, file)
+    await site.print(url, file.name)
 
     res.status(200).json({ link: `http://localhost:3000/screenshot/${file._id}` })
 
@@ -28,7 +29,7 @@ exports.download = async (req, res) => {
   try {
     const file = await File.findById({ _id: id })
 
-    if (file !== null) return res.download(`./src/images/${file.name}.png`)
+    if (file !== null) return res.download(path.join('src', 'images', `${file.name}.png`))
 
     res.status(400).json({ message: 'This file does not exist' })
   } catch (error) {
