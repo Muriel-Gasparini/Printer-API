@@ -1,22 +1,35 @@
 const path = require('path')
 const uuid = require('uuid')
+
 const File = require('../model/File')
 const site = require('../utils/site-print')
-const deleteImg = require('../utils/delete-image')
+const vars = require('../config/vars')
+const { deleteLocalImage } = require('../utils/delete-image')
+const { compressImages } = require('../utils/compress-image')
 
 exports.print = async (req, res) => {
   const { url } = req.body
-
   try {
     const name = uuid.v1()
-    const file = await File.create({ name })
 
-    await site.print(url, file.name)
+    await site.print(url, name)
 
-    res.status(200).json({ link: `http://localhost:3000/screenshot/${file._id}` })
+    const onSuccess = async () => {
+      try {
+        deleteLocalImage(name)
+        res.status(200).json({ link: `http://localhost:${vars.PORT}/minified/${name}.png` })
+      } catch (error) {
+        console.log(error)
+      }
+    }
 
-    deleteImg(file.name, file._id)
+    const onError = () => {
+      deleteLocalImage(name)
+    }
+
+    compressImages(onSuccess, onError)
   } catch (error) {
+    console.log(error)
     if (/address/.test(error)) {
       res.status(400).json({ error: error.message })
     }
@@ -27,11 +40,14 @@ exports.download = async (req, res) => {
   const { id } = req.params
 
   try {
-    const file = await File.findById({ _id: id })
+    const file = await File.findById(id)
 
-    if (file !== null) return res.download(path.join('src', 'images', `${file.name}.png`))
-
-    res.status(400).json({ message: 'This file does not exist' })
+    if (!file) {
+      res.status(400).json({ message: 'This file does not exist' })
+      return
+    }
+    console.log(file)
+    res.send(path.join('public', `${file.name}.png`))
   } catch (error) {
     res.status(500).json({ error: 'An error ocurred' })
   }

@@ -4,6 +4,7 @@ const vars = require('./config/vars')
 
 require('./database/connect')
 
+app.use(express.static('public'));
 app.use(express.json())
 
 app.use('/', require('./routes'))
