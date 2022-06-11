@@ -17,7 +17,7 @@ exports.print = async (req, res) => {
     const onSuccess = async () => {
       try {
         deleteLocalImage(name)
-        res.status(200).json({ link: `http://localhost:${vars.PORT}/minified/${name}.png` })
+        res.status(200).json({ link: `http://${vars.HOST}:${vars.PORT}/minified/${name}.png` })
       } catch (error) {
         console.log(error)
       }
